@@ -71,7 +71,7 @@ print(model.parameters())
 
 #training loop
 for epochs in range(epochs):
-
+    epoch_loss=0
     for batch_features , batch_labels in TrainDataloader:
 
         #Forward Pass 
@@ -87,6 +87,28 @@ for epochs in range(epochs):
 
         #upgrading the gradients
         optimiser.step()
+        epoch_loss+=loss.item()
+
+avg_loss=epoch_loss/len(TrainDataloader)
+print("Epoch: ",epoch , "Loss: ", avg_loss)
+
+#Model Eval
+model.eval()
+
+#Evaluation 
+total=0
+correct=0
+
+for batch_features,batch_labels in TestDataloader:
+    outputs=model(batch_features)
+    predicted=torch.max(output,1)
+    if (predicted==batch_labels):
+        correct+=1
+    total=total+batch_labels.shape[0]
+accuracy = correct/total
+
+print(f'Accuracy obtained is : {accuracy}')
+
 
         
 
