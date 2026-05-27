@@ -31,7 +31,32 @@ class MyDataset(Dataset):
 TrainDataset = MyDataset(X-train, y_train)
 TestDataset = MyDataset(X_test,y_test)
 
-#creating 
+#creating dataloader
+TrainDataloader=DataLoader(TrainDataset,batch_size=32,shuffle=True)
+TestDataloader=DataLoader(TestDataset,batch_sizesize=32,shuffle=False)
+
+#creating the nn model 
+class MLP(nn.Module):
+    def __init__(self,num_features):
+        super().__init__()
+        self.model=nn.Sequential(
+            nn.Linear(num_features,400),
+            nn.ReLU(),
+            nn.Linear(400,250),
+            nn.Tanh(),
+            nn.Linear(250,100),
+            nn.ReLU(),
+            nn.Linear(100,10),
+            nn.Softmax()
+                    )
+
+    def forward(self,X):
+       return self.model(X)
+
+
+
+
+
 
 
 
