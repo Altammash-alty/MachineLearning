@@ -1,7 +1,7 @@
 import torch 
 import torch.nn as nn 
 import torch.optim as optim
-from sklearn.preprocesssing import train_test_split
+from sklearn.model_selection import train_test_split
 import numpy as np 
 
 
@@ -54,7 +54,41 @@ class MLP(nn.Module):
        return self.model(X)
 
 
+#Learning Rate , Epochs
+lr=0.001
+epochs=200
 
+#Model initialisation
+model=MLP(X_train.shape[1])
+
+#Loss function 
+loss=nn.CrossEntropyLoss()
+#Optimiser
+optimiser=optim.RMSprop(model.parameters(),lr=lr)
+
+print(model.parameters())
+
+
+#training loop
+for epochs in range(epochs):
+
+    for batch_features , batch_labels in TrainDataloader:
+
+        #Forward Pass 
+        outputs=model(batch_features)
+
+        #Calculate loss
+        #zero the gradients
+        optimiser.zero_grad()
+        loss=loss(outputs,batch_labels)
+
+        #BackPass
+        loss.backward()
+
+        #upgrading the gradients
+        optimiser.step()
+
+        
 
 
 
