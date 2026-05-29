@@ -1,22 +1,29 @@
-import torch 
-import torch.nn as nn 
+import torch
+import torch.nn as nn
 import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader  
 from sklearn.model_selection import train_test_split
-import numpy as np 
+import numpy as np
+import pandas as pd                              
 
 
+torch.manual_seed(37)
+device = torch.device('cuda' if  torch.cuda.is_available()else 'cpu')
+print(f'Using Device : {device} ')
 
-#Data Loading 
+# ── Data Loading ──────────────────────────────────────────────────────────────
+df = pd.read_csv("fashion-mnist_train.csv")
 
-
+X = df.drop(columns=["label"]).values.astype(np.float32) / 255.0  # normalize to [0,1]
+y = df["label"].values
 #DataManipulation
 
-X_train,y_train,X_test,y_test=train_test_split(X,y,test_size=0.16,random_state=37)
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.16,random_state=37)
 
-X_train=torch.tensor(X.train)
-y_train=torch.tensor(y.train)
-X_test=torch.tensor(X.test)
-y_test=torch.tensor(y.test)
+X_train=torch.tensor(X_train, dtype=torch.float32)
+y_train=torch.tensor(y_train,dtype=torch.long)
+X_test=torch.tensor(X_test,dtype=torch.float32)
+y_test=torch.tensor(y_test,dtype=torch.long)
 
 #creating dataset 
 class MyDataset(Dataset):
@@ -28,12 +35,12 @@ class MyDataset(Dataset):
     def __getitem__(self,idx):
         return self.features[idx] , self.labels[idx]
 
-TrainDataset = MyDataset(X-train, y_train)
+TrainDataset = MyDataset(X_train, y_train)
 TestDataset = MyDataset(X_test,y_test)
 
 #creating dataloader
-TrainDataloader=DataLoader(TrainDataset,batch_size=32,shuffle=True)
-TestDataloader=DataLoader(TestDataset,batch_sizesize=32,shuffle=False)
+TrainDataloader=DataLoader(TrainDataset,batch_size=128,shuffle=True,pin_memory=True)
+TestDataloader=DataLoader(TestDataset,batch_size=128,shuffle=False,pin_memory=True)
 
 #creating the nn model 
 class MLP(nn.Module):
@@ -56,13 +63,14 @@ class MLP(nn.Module):
 
 #Learning Rate , Epochs
 lr=0.001
-epochs=200
+epochs=100
 
 #Model initialisation
 model=MLP(X_train.shape[1])
+model.to(device)
 
 #Loss function 
-loss=nn.CrossEntropyLoss()
+criterion=nn.CrossEntropyLoss()
 #Optimiser
 optimiser=optim.RMSprop(model.parameters(),lr=lr)
 
@@ -70,9 +78,11 @@ print(model.parameters())
 
 
 #training loop
-for epochs in range(epochs):
+for epoch in range(epochs):
     epoch_loss=0
     for batch_features , batch_labels in TrainDataloader:
+        batch_features=batch_features.to(device)
+        batch_labels=batch_labels.to(device)
 
         #Forward Pass 
         outputs=model(batch_features)
@@ -80,7 +90,7 @@ for epochs in range(epochs):
         #Calculate loss
         #zero the gradients
         optimiser.zero_grad()
-        loss=loss(outputs,batch_labels)
+        loss=criterion(outputs,batch_labels)
 
         #BackPass
         loss.backward()
@@ -88,9 +98,8 @@ for epochs in range(epochs):
         #upgrading the gradients
         optimiser.step()
         epoch_loss+=loss.item()
-
-avg_loss=epoch_loss/len(TrainDataloader)
-print("Epoch: ",epoch , "Loss: ", avg_loss)
+        avg_loss=epoch_loss/len(TrainDataloader)
+    print("Epoch: ",epoch , "Loss: ", avg_loss)
 
 #Model Eval
 model.eval()
@@ -98,16 +107,20 @@ model.eval()
 #Evaluation 
 total=0
 correct=0
+with torch.no_grad():
+    for batch_features,batch_labels in TestDataloader:
+        batch_features=batch_features.to(device)
+        batch_labels=batch_labels.to(device)        
+        outputs   = model(batch_features)
+        predicted = torch.argmax(outputs, dim=1)
 
-for batch_features,batch_labels in TestDataloader:
-    outputs=model(batch_features)
-    predicted=torch.max(output,1)
-    if (predicted==batch_labels):
-        correct+=1
-    total=total+batch_labels.shape[0]
+        correct += torch.eq(predicted, batch_labels).sum().item()
+        total   += batch_labels.size(0)
 accuracy = correct/total
 
 print(f'Accuracy obtained is : {accuracy}')
+
+
 
 
         
