@@ -25,3 +25,11 @@ tokenizer.fit_on_texts([text])
 total_words=len(tokenizer.word_index)+1
 #changes
 print(total_words)
+
+import tensorflow as tf
+x,y=input_sequences[:,:-1],input_sequences[:,-1]
+y=tf.keras.utils.to_categorical(y,num_classes=total_words)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+
+from tensorflow.keras.callbacks import EarlyStopping
+early_stopping = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
