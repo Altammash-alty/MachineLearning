@@ -43,30 +43,36 @@ TestDataset = MyDataset(X_test,y_test)
 TrainDataloader=DataLoader(TrainDataset,batch_size=128,shuffle=True,pin_memory=True)
 TestDataloader=DataLoader(TestDataset,batch_size=128,shuffle=False,pin_memory=True)
 
-
-# creating the hyperparameter trainign object 
-
-def objective(trial):
-        
-
     #creating the nn model 
     class MLP(nn.Module):
         def __init__(self,num_features):
             super().__init__()
-            self.model=nn.Sequential(
-                nn.Linear(num_features,400),
-                nn.ReLU(),
-                nn.Linear(400,250),
-                nn.Tanh(),
-                nn.Linear(250,100),
-                nn.ReLU(),
-                nn.Linear(100,10),
-                nn.Softmax()
+            layers=[]
+            for i in ranve
+                      
                         )
 
         def forward(self,X):
         return self.model(X)
 
+
+
+
+
+# creating the hyperparameter trainign object 
+
+def objective(trial):
+
+    hidden_layer=trial.suggest_int("hidden_layer",1,10)
+    number_of_neurons=trial.suggest_int("number_of_neurons",100,500,step=100)
+    activation_functions=trial.suggest_categorical("activations",["ReLU","Tanh","Softmax","Leaky ReLU"])
+    optimiser=trial.suggest_categorical("optimiser",["RMSProp","Adam","SGD","Adagrad","AdamW"])
+    learning_rate=trial.suggest_float("learning_rate",1e-5,1e-1,log=True)
+    dropout_rate=trial.suggest_float("dropout_rate",0.0,0.5,step=0.1)
+    batch_size=trial.suggest_categorical("batch_size",[16,32,64,128])
+    epochs=trial.suggest_int("epochs",10,200,step=10)
+    weight_decay=trial.suggest_float("weight_decay",1e-5,1e-1,log=True)    
+    layers=[]
 
     #Learning Rate , Epochs
     lr=0.001
