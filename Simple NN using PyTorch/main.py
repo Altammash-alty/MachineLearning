@@ -7,10 +7,12 @@ from sklearn.model_selection import train_test_split
 torch.manual_seed(37)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Using Device : {device}')                   
-    
 
-#Crreating Dataset
-class  TrainingDataset(Dataset):
+
+x_train,x_test,y_train,y_test=train_test_split(features,labels,test_size=0.2,random_state=37)
+
+#Creating Dataset
+class  myDataset(Dataset):
     def __init__(self,features,labels): 
         self.features=features
         self.labels=labels
@@ -19,7 +21,18 @@ class  TrainingDataset(Dataset):
         return len(self.features)
 
     def __getitem__(self,idx):
+        
         return self.features[idx],self.labels[idx]
+
+TrainingDataset = myDataset(x_train,y_train)
+TestDataset = myDataset(x_test,y_test)
+
+TrainingData = DataLoader(TrainingDataset,batch_size=32,shuffle=True )
+TestData = DataLoader(TestDataset,batch_size=32,shuffle=False )
+
+
+
+
 
 
 
