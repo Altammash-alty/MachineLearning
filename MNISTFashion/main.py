@@ -103,7 +103,6 @@ def objective(trial):
 
 
         for epoch in range(epochs):
-            epoch_loss=0
             for batch_features , batch_labels in TrainDataloader:
                 batch_features=batch_features.to(device)
                 batch_labels=batch_labels.to(device)
@@ -121,9 +120,8 @@ def objective(trial):
 
                 #upgrading the gradients
                 optimiser.step()
-                epoch_loss+=loss.item()
-                avg_loss=epoch_loss/len(TrainDataloader)
-            print("Epoch: ",epoch , "Loss: ", avg_loss)
+                
+                
 
         #Model Eval
         model.eval()
@@ -144,7 +142,8 @@ def objective(trial):
 
     print(f'Accuracy obtained is : {accuracy}')
 
-
+study=optuna.create_study(direction="maximize",sampler="TPESampler")
+study.optimize("objective",n_trials=50)
 
 
         
