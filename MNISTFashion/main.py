@@ -44,22 +44,29 @@ TrainDataloader=DataLoader(TrainDataset,batch_size=128,shuffle=True,pin_memory=T
 TestDataloader=DataLoader(TestDataset,batch_size=128,shuffle=False,pin_memory=True)
 
     #creating the nn model 
-    class MLP(nn.Module):
-        def __init__(self,num_features):
-            super().__init__()
-            layers=[]
-            for i in ranve
-                      
-                        )
+class MLP(nn.Module):
+    def __init__(self,num_features):
+        super().__init__()
+        layers=[]
+        for i in range (hidden_layers):
+            layers.append(nn.Linear(number_features,number_of_neurons)),
+            layers.append(nn.BatchNorm1d(number_of_neurons)),
+            layers.append(nn.activations()),
+            layers.append(nn.Dropout(dropout_rate)),
+            number_features=number_of_neurons
 
-        def forward(self,X):
+        layers.append(nn.Linear(number_of_neurons,10)),
+        layers.append(nn.Softmax())      
+        self.model = nn.Sequential(*layers)    
+
+    def forward(self,X):
         return self.model(X)
 
 
 
 
 
-# creating the hyperparameter trainign object 
+# creating the hyperparameter training object 
 
 def objective(trial):
 
@@ -68,7 +75,7 @@ def objective(trial):
     activation_functions=trial.suggest_categorical("activations",["ReLU","Tanh","Softmax","Leaky ReLU"])
     optimiser=trial.suggest_categorical("optimiser",["RMSProp","Adam","SGD","Adagrad","AdamW"])
     learning_rate=trial.suggest_float("learning_rate",1e-5,1e-1,log=True)
-    dropout_rate=trial.suggest_float("dropout_rate",0.0,0.5,step=0.1)
+    dropout_rate=trial.suggest_float("dropout_rate",0.1,0.5,step=0.1)
     batch_size=trial.suggest_categorical("batch_size",[16,32,64,128])
     epochs=trial.suggest_int("epochs",10,200,step=10)
     weight_decay=trial.suggest_float("weight_decay",1e-5,1e-1,log=True)    
