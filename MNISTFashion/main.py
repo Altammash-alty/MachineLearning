@@ -4,7 +4,8 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader  
 from sklearn.model_selection import train_test_split
 import numpy as np
-import pandas as pd                              
+import pandas as pd      
+
 
 
 torch.manual_seed(37)
@@ -42,67 +43,73 @@ TestDataset = MyDataset(X_test,y_test)
 TrainDataloader=DataLoader(TrainDataset,batch_size=128,shuffle=True,pin_memory=True)
 TestDataloader=DataLoader(TestDataset,batch_size=128,shuffle=False,pin_memory=True)
 
-#creating the nn model 
-class MLP(nn.Module):
-    def __init__(self,num_features):
-        super().__init__()
-        self.model=nn.Sequential(
-            nn.Linear(num_features,400),
-            nn.ReLU(),
-            nn.Linear(400,250),
-            nn.Tanh(),
-            nn.Linear(250,100),
-            nn.ReLU(),
-            nn.Linear(100,10),
-            nn.Softmax()
-                    )
 
-    def forward(self,X):
-       return self.model(X)
+# creating the hyperparameter trainign object 
 
+def objective(trial):
+        
 
-#Learning Rate , Epochs
-lr=0.001
-epochs=100
+    #creating the nn model 
+    class MLP(nn.Module):
+        def __init__(self,num_features):
+            super().__init__()
+            self.model=nn.Sequential(
+                nn.Linear(num_features,400),
+                nn.ReLU(),
+                nn.Linear(400,250),
+                nn.Tanh(),
+                nn.Linear(250,100),
+                nn.ReLU(),
+                nn.Linear(100,10),
+                nn.Softmax()
+                        )
 
-#Model initialisation
-model=MLP(X_train.shape[1])
-model.to(device)
-
-#Loss function 
-criterion=nn.CrossEntropyLoss()
-#Optimiser
-optimiser=optim.RMSprop(model.parameters(),lr=lr)
-
-print(model.parameters())
+        def forward(self,X):
+        return self.model(X)
 
 
-#training loop
-for epoch in range(epochs):
-    epoch_loss=0
-    for batch_features , batch_labels in TrainDataloader:
-        batch_features=batch_features.to(device)
-        batch_labels=batch_labels.to(device)
+    #Learning Rate , Epochs
+    lr=0.001
+    epochs=100
 
-        #Forward Pass 
-        outputs=model(batch_features)
+    #Model initialisation
+    model=MLP(X_train.shape[1])
+    model.to(device)
 
-        #Calculate loss
-        #zero the gradients
-        optimiser.zero_grad()
-        loss=criterion(outputs,batch_labels)
+    #Loss function 
+    criterion=nn.CrossEntropyLoss()
+    #Optimiser
+    optimiser=optim.RMSprop(model.parameters(),lr=lr)
 
-        #BackPass
-        loss.backward()
+    print(model.parameters())
 
-        #upgrading the gradients
-        optimiser.step()
-        epoch_loss+=loss.item()
-        avg_loss=epoch_loss/len(TrainDataloader)
-    print("Epoch: ",epoch , "Loss: ", avg_loss)
 
-#Model Eval
-model.eval()
+    #training loop
+    for epoch in range(epochs):
+        epoch_loss=0
+        for batch_features , batch_labels in TrainDataloader:
+            batch_features=batch_features.to(device)
+            batch_labels=batch_labels.to(device)
+
+            #Forward Pass 
+            outputs=model(batch_features)
+
+            #Calculate loss
+            #zero the gradients
+            optimiser.zero_grad()
+            loss=criterion(outputs,batch_labels)
+
+            #BackPass
+            loss.backward()
+
+            #upgrading the gradients
+            optimiser.step()
+            epoch_loss+=loss.item()
+            avg_loss=epoch_loss/len(TrainDataloader)
+        print("Epoch: ",epoch , "Loss: ", avg_loss)
+
+    #Model Eval
+    model.eval()
 
 #Evaluation 
 total=0
