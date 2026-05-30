@@ -39,11 +39,9 @@ class MyDataset(Dataset):
 TrainDataset = MyDataset(X_train, y_train)
 TestDataset = MyDataset(X_test,y_test)
 
-#creating dataloader
-TrainDataloader=DataLoader(TrainDataset,batch_size=128,shuffle=True,pin_memory=True)
-TestDataloader=DataLoader(TestDataset,batch_size=128,shuffle=False,pin_memory=True)
 
-    #creating the nn model 
+
+#creating the nn model 
 class MLP(nn.Module):
     def __init__(self,num_features):
         super().__init__()
@@ -66,7 +64,7 @@ class MLP(nn.Module):
 
 
 
-# creating the hyperparameter training object 
+# creating the hyperparameter traini object 
 
 def objective(trial):
 
@@ -79,66 +77,72 @@ def objective(trial):
     batch_size=trial.suggest_categorical("batch_size",[16,32,64,128])
     epochs=trial.suggest_int("epochs",10,200,step=10)
     weight_decay=trial.suggest_float("weight_decay",1e-5,1e-1,log=True)    
-    layers=[]
 
-    #Learning Rate , Epochs
-    lr=0.001
-    epochs=100
-
-    #Model initialisation
-    model=MLP(X_train.shape[1])
-    model.to(device)
-
-    #Loss function 
+    #creating dataloader
+    TrainDataloader=DataLoader(TrainDataset,batch_size=batch_size,shuffle=True,pin_memory=True)
+    TestDataloader=DataLoader(TestDataset,batch_size=batch_size,shuffle=False,pin_memory=True)
+    
     criterion=nn.CrossEntropyLoss()
-    #Optimiser
-    optimiser=optim.RMSprop(model.parameters(),lr=lr)
 
-    print(model.parameters())
+    if optimiser=="RMSProp":
+        optimiser=optim.RMSprop(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
+    elif optimiser=="Adam":
+        optimiser=optim.Adam(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
+    elif optimiser=="SGD":
+        optimiser=optim.SGD(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
+    elif optimiser=="Adagrad":
+        optimiser=optim.Adagrad(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
+    else :
+        optimiser=optim.AdamW(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
+    
+    
+
+        #Model initialisation
+        model=MLP(X_train.shape[1])
+        model.to(device)
 
 
-    #training loop
-    for epoch in range(epochs):
-        epoch_loss=0
-        for batch_features , batch_labels in TrainDataloader:
-            batch_features=batch_features.to(device)
-            batch_labels=batch_labels.to(device)
+        for epoch in range(epochs):
+            epoch_loss=0
+            for batch_features , batch_labels in TrainDataloader:
+                batch_features=batch_features.to(device)
+                batch_labels=batch_labels.to(device)
 
-            #Forward Pass 
-            outputs=model(batch_features)
+                #Forward Pass 
+                outputs=model(batch_features)
 
-            #Calculate loss
-            #zero the gradients
-            optimiser.zero_grad()
-            loss=criterion(outputs,batch_labels)
+                #Calculate loss
+                #zero the gradients
+                optimiser.zero_grad()
+                loss=criterion(outputs,batch_labels)
 
-            #BackPass
-            loss.backward()
+                #BackPass
+                loss.backward()
 
-            #upgrading the gradients
-            optimiser.step()
-            epoch_loss+=loss.item()
-            avg_loss=epoch_loss/len(TrainDataloader)
-        print("Epoch: ",epoch , "Loss: ", avg_loss)
+                #upgrading the gradients
+                optimiser.step()
+                epoch_loss+=loss.item()
+                avg_loss=epoch_loss/len(TrainDataloader)
+            print("Epoch: ",epoch , "Loss: ", avg_loss)
 
-    #Model Eval
-    model.eval()
+        #Model Eval
+        model.eval()
 
 #Evaluation 
-total=0
-correct=0
-with torch.no_grad():
-    for batch_features,batch_labels in TestDataloader:
-        batch_features=batch_features.to(device)
-        batch_labels=batch_labels.to(device)        
-        outputs   = model(batch_features)
-        predicted = torch.argmax(outputs, dim=1)
+    total=0
+    correct=0
+    with torch.no_grad():
+        for batch_features,batch_labels in TestDataloader:
+            batch_features=batch_features.to(device)
+            batch_labels=batch_labels.to(device)        
+            outputs   = model(batch_features)
+            predicted = torch.argmax(outputs, dim=1)
 
-        correct += torch.eq(predicted, batch_labels).sum().item()
-        total   += batch_labels.size(0)
-accuracy = correct/total
+            correct += torch.eq(predicted, batch_labels).sum().item()
+            total   += batch_labels.size(0)
+    accuracy = correct/total
 
-print(f'Accuracy obtained is : {accuracy}')
+    print(f'Accuracy obtained is : {accuracy}')
 
 
 
