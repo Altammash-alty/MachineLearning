@@ -31,12 +31,6 @@ TrainingData = DataLoader(TrainingDataset,batch_size=32,shuffle=True )
 TestData = DataLoader(TestDataset,batch_size=32,shuffle=False )
 
 
-
-
-
-
-
-
 class Model(nn.Module):
     def __init__(self,num_features):
         super().__init__()
@@ -55,7 +49,12 @@ class Model(nn.Module):
         return out
 
 
-features=torch.rand(10,5)
+epochs =50
+learning rate = 0.002
+
+for epoch in range (epochs):
+    for batch_features , batch_labels in TrainingData :
+         
 
 model=Model(features.shape[1])
 #Model.forward(Features)
