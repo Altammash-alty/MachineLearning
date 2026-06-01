@@ -96,3 +96,11 @@ model=MLP(
             correct += torch.eq(predicted, batch_labels).sum().item()
             total   += batch_labels.size(0)
     accuracy = correct/total
+
+     print(f'Accuracy obtained is : {accuracy}')
+    return accuracy
+
+study=optuna.create_study(direction="maximize",sampler=optuna.samplers.TPESampler())
+study.optimize(objective,n_trials=50)
+print(f'Best Accuracy: {study.best_value}')
+print(f'Best Parameters : {study.best_params}')
