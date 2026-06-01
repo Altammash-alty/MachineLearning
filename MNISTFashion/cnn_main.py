@@ -83,3 +83,16 @@ model=MLP(
 
     #Model Eval
     model.eval()
+     #Evaluation 
+    total=0
+    correct=0
+    with torch.no_grad():
+        for batch_features,batch_labels in TestDataloader:
+            batch_features=batch_features.to(device)
+            batch_labels=batch_labels.to(device)        
+            outputs   = model(batch_features)
+            predicted = torch.argmax(outputs, dim=1)
+
+            correct += torch.eq(predicted, batch_labels).sum().item()
+            total   += batch_labels.size(0)
+    accuracy = correct/total
