@@ -54,3 +54,21 @@ model=MLP(
         optimiser=optim.Adagrad(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
     else :
         optimiser=optim.AdamW(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
+    
+    print(f"\n[Trial {trial.number}] Starting training with epochs={epochs}, batch_size={batch_size}...")
+    for epoch in range(epochs):
+        epoch_loss = 0.0
+        for batch_features , batch_labels in TrainDataloader:
+            batch_features=batch_features.to(device)
+            batch_labels=batch_labels.to(device)
+
+            #Forward Pass 
+            outputs=model(batch_features)
+
+            #Calculate loss
+            #zero the gradients
+            optimiser.zero_grad()
+            loss=criterion(outputs,batch_labels)
+
+            #BackPass
+            loss.backward()
