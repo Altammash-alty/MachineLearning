@@ -117,8 +117,9 @@ def objective(trial):
     else :
         optimiser=optim.AdamW(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
     
-    model.train()
+    print(f"\n[Trial {trial.number}] Starting training with epochs={epochs}, batch_size={batch_size}...")
     for epoch in range(epochs):
+        epoch_loss = 0.0
         for batch_features , batch_labels in TrainDataloader:
             batch_features=batch_features.to(device)
             batch_labels=batch_labels.to(device)
@@ -136,6 +137,11 @@ def objective(trial):
 
             #upgrading the gradients
             optimiser.step()
+            epoch_loss += loss.item()
+            
+        # Print progress every 5 epochs, or first and last epoch
+        if epoch == 0 or (epoch + 1) % 5 == 0 or (epoch + 1) == epochs:
+            print(f"  Trial {trial.number} | Epoch {epoch+1:02d}/{epochs:02d} | Avg Loss: {epoch_loss/len(TrainDataloader):.4f}")
 
     #Model Eval
     model.eval()
