@@ -100,19 +100,15 @@ for epoch in range(epochs):
     correct=0
     with torch.no_grad():
         for batch_features,batch_labels in TestDataloader:
-            batch_features=batch_features.to(device)
-            batch_labels=batch_labels.to(device)        
-            outputs   = model(batch_features)
-            predicted = torch.argmax(outputs, dim=1)
+                batch_features=batch_features.to(device)
+                batch_labels=batch_labels.to(device)        
+                outputs   = model(batch_features)
+                predicted = torch.argmax(outputs, dim=1)
 
-            correct += torch.eq(predicted, batch_labels).sum().item()
-            total   += batch_labels.size(0)
-    accuracy = correct/total
+                correct += torch.eq(predicted, batch_labels).sum().item()
+                total   += batch_labels.size(0)
+                accuracy = correct/total
+                return accuracy
 
 print(f'Accuracy obtained is : {accuracy}')
-return accuracy
 
-study=optuna.create_study(direction="maximize",sampler=optuna.samplers.TPESampler())
-study.optimize(objective,n_trials=50)
-print(f'Best Accuracy: {study.best_value}')
-print(f'Best Parameters : {study.best_params}')
