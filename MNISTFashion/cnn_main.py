@@ -13,7 +13,11 @@ df = pd.read_csv("fashion-mnist_train.csv")
 X=df.drop("label",axis=1).values.astype(np.float32)
 y=df["label"].values
 
+
+device = ("cuda" if torch.cuda.is_available() else "cpu")
+
 X=X.reshape(-1,1,28,28)
+X=X.expand(-1,3,28,28)
 X=X/255.0
 
 X_train,X_test,y_train,y_test=test_train_split(X,y,test_size=0.16,random_state=37)
@@ -30,52 +34,60 @@ class MyDataset(Dataset):
 TrainingDataset = MyDataset(X_train,y_train)
 TestDataset=MyDataset(X_test,y_test)
 
-TrainingDataLoader = DataLoader(TrainingDataset,batch_size=,shuffle=True)
-TestDataLoader = DataLoader(TestDataset,batch_size=1,shuffle=False)
+TrainingDataLoader = DataLoader(TrainingDataset,batch_size=32,shuffle=True)
+TestDataLoader = DataLoader(TestDataset,batch_size=32,shuffle=False)
 
-model=MLP(
-        num_features=X_train.shape[1],
-        hidden_layers=hidden_layer,
-        number_of_neurons=number_of_neurons,
-        activations=activation_functions,
-        dropout_rate=dropout_rate
-    )
-    model.to(device)
+class CNN(nn.Module):
+    def __init__(self,num_features):
+        super().__init__()
+        self.conv=nn.Sequential(
+            nn.Conv2d(3,16,3,1,padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            nn.Conv2d(16,32,3,1,padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+            nn.Conv2d(32,64,3,1,padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+        )
+        self.classifier=nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(64*7*7,128),
+            nn.ReLU(),
+            nn.Linear(128,10),
+        )
+    def forward(self,X):
+        image_features=self.conv(X)
+        final_output=self.classifier(image_features)
+        return final_output
 
-    criterion=nn.CrossEntropyLoss()
 
-    if optimiser_name=="RMSProp":
-        optimiser=optim.RMSprop(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
-    elif optimiser_name=="Adam":
-        optimiser=optim.Adam(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
-    elif optimiser_name=="SGD":
-        optimiser=optim.SGD(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
-    elif optimiser_name=="Adagrad":
-        optimiser=optim.Adagrad(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
-    else :
-        optimiser=optim.AdamW(model.parameters(),lr=learning_rate,weight_decay=weight_decay)
-    
-    print(f"\n[Trial {trial.number}] Starting training with epochs={epochs}, batch_size={batch_size}...")
-    for epoch in range(epochs):
-        epoch_loss = 0.0
-        for batch_features , batch_labels in TrainDataloader:
-            batch_features=batch_features.to(device)
-            batch_labels=batch_labels.to(device)
 
-            #Forward Pass 
-            outputs=model(batch_features)
+model=CNN(num_features=X_train.shape[1])
+model.to(device)
 
-            #Calculate loss
-            #zero the gradients
-            optimiser.zero_grad()
-            loss=criterion(outputs,batch_labels)
+criterion=nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(),lr=0.0037)
+for epoch in range(epochs):
+    epoch_loss = 0.0
+    for batch_features , batch_labels in TrainDataloader:
+        batch_features=batch_features.to(device)
+        batch_labels=batch_labels.to(device)
+        #Forward Pass 
+        outputs=model(batch_features)
 
-            #BackPass
-            loss.backward()
+        #Calculate loss
+        #zero the gradients
+        optimiser.zero_grad()
+        loss=criterion(outputs,batch_labels)
+
+        #BackPass
+        loss.backward()
             
-            #upgrading the gradients
-            optimiser.step()
-            epoch_loss += loss.item()
+        #upgrading the gradients
+        optimiser.step()
+        epoch_loss += loss.item()
             
         # Print progress every 5 epochs, or first and last epoch
         if epoch == 0 or (epoch + 1) % 5 == 0 or (epoch + 1) == epochs:
@@ -97,8 +109,8 @@ model=MLP(
             total   += batch_labels.size(0)
     accuracy = correct/total
 
-     print(f'Accuracy obtained is : {accuracy}')
-    return accuracy
+print(f'Accuracy obtained is : {accuracy}')
+return accuracy
 
 study=optuna.create_study(direction="maximize",sampler=optuna.samplers.TPESampler())
 study.optimize(objective,n_trials=50)
