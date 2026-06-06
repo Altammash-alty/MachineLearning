@@ -135,8 +135,6 @@ model = LSTMModel(len(vocab))
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
-print(f"Using device: {device}")
-print(model)
 
 epochs = 50
 learning_rate = 0.001
