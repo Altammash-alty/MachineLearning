@@ -17,16 +17,7 @@ hamlet_path = os.path.join(script_dir, '..', 'LSTM RNN', 'hamlet.txt')
 
 with open(hamlet_path, 'r', encoding='utf-8') as file:
     document = file.read().lower()
-
-# Tokenize
-print("Tokenizing text...", flush=True)
 tokens = word_tokenize(document)
-print(f"Total tokens: {len(tokens)}", flush=True)
-
-# -------------------------------------------------------------------
-# 3. Build vocabulary
-# -------------------------------------------------------------------
-
 vocab = {'<unk>': 0}
 
 for token in Counter(tokens).keys():
