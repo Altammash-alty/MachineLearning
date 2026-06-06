@@ -66,10 +66,6 @@ for sentence in input_numerical_sentences:
 
 print(f"Number of training sequences: {len(training_sequence)}")
 
-# -------------------------------------------------------------------
-# 6. Pad sequences to uniform length
-# -------------------------------------------------------------------
-
 len_list = [len(seq) for seq in training_sequence]
 max_len = max(len_list)
 print(f"Max sequence length: {max_len}")
@@ -85,11 +81,6 @@ for sequence in training_sequence:
     padded_training_sequence.append([0] * (max_len - len(sequence)) + sequence)
 
 padded_training_sequence = torch.tensor(padded_training_sequence, dtype=torch.long)
-print(f"Padded tensor shape: {padded_training_sequence.shape}")
-
-# -------------------------------------------------------------------
-# 7. Split into X (input) and y (target)
-# -------------------------------------------------------------------
 
 X = padded_training_sequence[:, :-1]
 y = padded_training_sequence[:, -1]
