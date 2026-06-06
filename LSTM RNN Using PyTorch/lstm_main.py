@@ -55,10 +55,6 @@ for sentence in input_sentences:
         input_numerical_sentences.append(text_to_indices(tokenized, vocab))
 
 
-# -------------------------------------------------------------------
-# 5. Create training sequences (n-gram style)
-# -------------------------------------------------------------------
-
 training_sequence = []
 for sentence in input_numerical_sentences:
     for i in range(1, len(sentence)):
@@ -208,20 +204,10 @@ def prediction(model, vocab, text, seq_len):
     return text + " " + list(vocab.keys())[index.item()]
 
 
-# The input sequence length is max_len - 1 (since we removed the last token for y)
+
 input_seq_len = max_len - 1
 
-# -------------------------------------------------------------------
-# 13. Test predictions
-# -------------------------------------------------------------------
 
-print("\n--- Predictions ---")
-print(prediction(model, vocab, "to be or not to", input_seq_len))
-print(prediction(model, vocab, "the king", input_seq_len))
-print(prediction(model, vocab, "my lord", input_seq_len))
-
-# Generate a sequence of tokens
-print("\n--- Generating sequence ---")
 num_tokens = 10
 input_text = "to be or not"
 
@@ -231,9 +217,6 @@ for i in range(num_tokens):
     input_text = output_text
     time.sleep(0.3)
 
-# -------------------------------------------------------------------
-# 14. Calculate accuracy
-# -------------------------------------------------------------------
 
 dataloader_eval = DataLoader(dataset, batch_size=64, shuffle=False)
 
