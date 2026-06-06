@@ -109,6 +109,5 @@ for epoch in range(epochs):
                 total   += batch_labels.size(0)
                 accuracy = correct/total
                 return accuracy
-
 print(f'Accuracy obtained is : {accuracy}')
 
