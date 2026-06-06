@@ -17,6 +17,10 @@ hamlet_path = os.path.join(script_dir, '..', 'LSTM RNN', 'hamlet.txt')
 
 with open(hamlet_path, 'r', encoding='utf-8') as file:
     document = file.read().lower()
+# -------------------------------------------------------------------
+# 2. Tokenize
+# -------------------------------------------------------------------
+
 tokens = word_tokenize(document)
 vocab = {'<unk>': 0}
 
@@ -50,19 +54,17 @@ for sentence in input_sentences:
     if tokenized:  # skip empty lines
         input_numerical_sentences.append(text_to_indices(tokenized, vocab))
 
-print(f"Number of sentences: {len(input_numerical_sentences)}", flush=True)
 
 # -------------------------------------------------------------------
 # 5. Create training sequences (n-gram style)
 # -------------------------------------------------------------------
 
-print("Creating training sequences...", flush=True)
 training_sequence = []
 for sentence in input_numerical_sentences:
     for i in range(1, len(sentence)):
         training_sequence.append(sentence[:i + 1])
 
-print(f"Number of training sequences: {len(training_sequence)}", flush=True)
+print(f"Number of training sequences: {len(training_sequence)}")
 
 # -------------------------------------------------------------------
 # 6. Pad sequences to uniform length
@@ -70,24 +72,20 @@ print(f"Number of training sequences: {len(training_sequence)}", flush=True)
 
 len_list = [len(seq) for seq in training_sequence]
 max_len = max(len_list)
-print(f"Max sequence length: {max_len}", flush=True)
+print(f"Max sequence length: {max_len}")
 
-# Cap sequence length to avoid excessive memory usage with Hamlet
-# (Hamlet has very long lines; cap at a reasonable length)
-MAX_SEQ_LEN = 50
+
+MAX_SEQ_LEN = 100
 if max_len > MAX_SEQ_LEN:
-    print(f"Capping sequence length from {max_len} to {MAX_SEQ_LEN}", flush=True)
-    # Filter out sequences longer than MAX_SEQ_LEN
     training_sequence = [seq for seq in training_sequence if len(seq) <= MAX_SEQ_LEN]
     max_len = MAX_SEQ_LEN
-    print(f"Training sequences after filtering: {len(training_sequence)}", flush=True)
 
 padded_training_sequence = []
 for sequence in training_sequence:
     padded_training_sequence.append([0] * (max_len - len(sequence)) + sequence)
 
 padded_training_sequence = torch.tensor(padded_training_sequence, dtype=torch.long)
-print(f"Padded tensor shape: {padded_training_sequence.shape}", flush=True)
+print(f"Padded tensor shape: {padded_training_sequence.shape}")
 
 # -------------------------------------------------------------------
 # 7. Split into X (input) and y (target)
@@ -96,8 +94,8 @@ print(f"Padded tensor shape: {padded_training_sequence.shape}", flush=True)
 X = padded_training_sequence[:, :-1]
 y = padded_training_sequence[:, -1]
 
-print(f"X shape: {X.shape}", flush=True)
-print(f"y shape: {y.shape}", flush=True)
+print(f"X shape: {X.shape}")
+print(f"y shape: {y.shape}")
 
 # -------------------------------------------------------------------
 # 8. Create Dataset and DataLoader
@@ -120,7 +118,7 @@ class CustomDataset(Dataset):
 dataset = CustomDataset(X, y)
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
 
-print(f"Dataset size: {len(dataset)}", flush=True)
+print(f"Dataset size: {len(dataset)}")
 
 # -------------------------------------------------------------------
 # 9. Define the LSTM Model
@@ -150,10 +148,10 @@ model = LSTMModel(len(vocab))
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
-print(f"Using device: {device}", flush=True)
+print(f"Using device: {device}")
 print(model)
 
-epochs = 30
+epochs = 50
 learning_rate = 0.001
 
 criterion = nn.CrossEntropyLoss()
@@ -182,7 +180,7 @@ for epoch in range(epochs):
 
         total_loss = total_loss + loss.item()
 
-    print(f"Epoch: {epoch + 1}, Loss: {total_loss:.4f}", flush=True)
+    print(f"Epoch: {epoch + 1}, Loss: {total_loss:.4f}")
 
 
 # -------------------------------------------------------------------
