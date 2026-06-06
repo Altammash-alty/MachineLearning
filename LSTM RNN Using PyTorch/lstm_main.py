@@ -10,13 +10,6 @@ from nltk.tokenize import word_tokenize
 from collections import Counter
 import time
 
-# Download NLTK data
-nltk.download('punkt')
-nltk.download('punkt_tab')
-
-# -------------------------------------------------------------------
-# 1. Load and preprocess the Hamlet text
-# -------------------------------------------------------------------
 
 # Resolve path to hamlet.txt relative to the script location
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,11 +18,10 @@ hamlet_path = os.path.join(script_dir, '..', 'LSTM RNN', 'hamlet.txt')
 with open(hamlet_path, 'r', encoding='utf-8') as file:
     document = file.read().lower()
 
-# -------------------------------------------------------------------
-# 2. Tokenize
-# -------------------------------------------------------------------
-
+# Tokenize
+print("Tokenizing text...", flush=True)
 tokens = word_tokenize(document)
+print(f"Total tokens: {len(tokens)}", flush=True)
 
 # -------------------------------------------------------------------
 # 3. Build vocabulary
@@ -41,7 +33,7 @@ for token in Counter(tokens).keys():
     if token not in vocab:
         vocab[token] = len(vocab)
 
-print(f"Vocabulary size: {len(vocab)}")
+print(f"Vocabulary size: {len(vocab)}", flush=True)
 
 # -------------------------------------------------------------------
 # 4. Split into sentences and convert to numerical indices
@@ -60,6 +52,7 @@ def text_to_indices(sentence, vocab):
     return numerical_sentence
 
 
+print("Converting sentences to indices...", flush=True)
 input_numerical_sentences = []
 
 for sentence in input_sentences:
@@ -67,18 +60,19 @@ for sentence in input_sentences:
     if tokenized:  # skip empty lines
         input_numerical_sentences.append(text_to_indices(tokenized, vocab))
 
-print(f"Number of sentences: {len(input_numerical_sentences)}")
+print(f"Number of sentences: {len(input_numerical_sentences)}", flush=True)
 
 # -------------------------------------------------------------------
 # 5. Create training sequences (n-gram style)
 # -------------------------------------------------------------------
 
+print("Creating training sequences...", flush=True)
 training_sequence = []
 for sentence in input_numerical_sentences:
     for i in range(1, len(sentence)):
         training_sequence.append(sentence[:i + 1])
 
-print(f"Number of training sequences: {len(training_sequence)}")
+print(f"Number of training sequences: {len(training_sequence)}", flush=True)
 
 # -------------------------------------------------------------------
 # 6. Pad sequences to uniform length
@@ -86,24 +80,24 @@ print(f"Number of training sequences: {len(training_sequence)}")
 
 len_list = [len(seq) for seq in training_sequence]
 max_len = max(len_list)
-print(f"Max sequence length: {max_len}")
+print(f"Max sequence length: {max_len}", flush=True)
 
 # Cap sequence length to avoid excessive memory usage with Hamlet
 # (Hamlet has very long lines; cap at a reasonable length)
-MAX_SEQ_LEN = 100
+MAX_SEQ_LEN = 50
 if max_len > MAX_SEQ_LEN:
-    print(f"Capping sequence length from {max_len} to {MAX_SEQ_LEN}")
+    print(f"Capping sequence length from {max_len} to {MAX_SEQ_LEN}", flush=True)
     # Filter out sequences longer than MAX_SEQ_LEN
     training_sequence = [seq for seq in training_sequence if len(seq) <= MAX_SEQ_LEN]
     max_len = MAX_SEQ_LEN
-    print(f"Training sequences after filtering: {len(training_sequence)}")
+    print(f"Training sequences after filtering: {len(training_sequence)}", flush=True)
 
 padded_training_sequence = []
 for sequence in training_sequence:
     padded_training_sequence.append([0] * (max_len - len(sequence)) + sequence)
 
 padded_training_sequence = torch.tensor(padded_training_sequence, dtype=torch.long)
-print(f"Padded tensor shape: {padded_training_sequence.shape}")
+print(f"Padded tensor shape: {padded_training_sequence.shape}", flush=True)
 
 # -------------------------------------------------------------------
 # 7. Split into X (input) and y (target)
@@ -112,8 +106,8 @@ print(f"Padded tensor shape: {padded_training_sequence.shape}")
 X = padded_training_sequence[:, :-1]
 y = padded_training_sequence[:, -1]
 
-print(f"X shape: {X.shape}")
-print(f"y shape: {y.shape}")
+print(f"X shape: {X.shape}", flush=True)
+print(f"y shape: {y.shape}", flush=True)
 
 # -------------------------------------------------------------------
 # 8. Create Dataset and DataLoader
@@ -136,7 +130,7 @@ class CustomDataset(Dataset):
 dataset = CustomDataset(X, y)
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
 
-print(f"Dataset size: {len(dataset)}")
+print(f"Dataset size: {len(dataset)}", flush=True)
 
 # -------------------------------------------------------------------
 # 9. Define the LSTM Model
@@ -166,10 +160,10 @@ model = LSTMModel(len(vocab))
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
-print(f"Using device: {device}")
+print(f"Using device: {device}", flush=True)
 print(model)
 
-epochs = 50
+epochs = 30
 learning_rate = 0.001
 
 criterion = nn.CrossEntropyLoss()
@@ -198,7 +192,7 @@ for epoch in range(epochs):
 
         total_loss = total_loss + loss.item()
 
-    print(f"Epoch: {epoch + 1}, Loss: {total_loss:.4f}")
+    print(f"Epoch: {epoch + 1}, Loss: {total_loss:.4f}", flush=True)
 
 
 # -------------------------------------------------------------------
