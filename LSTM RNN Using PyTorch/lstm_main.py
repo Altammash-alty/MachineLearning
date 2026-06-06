@@ -111,10 +111,6 @@ class LSTMModel(nn.Module):
         return output
 
 
-# -------------------------------------------------------------------
-# 10. Initialize model, loss, optimizer
-# -------------------------------------------------------------------
-
 model = LSTMModel(len(vocab))
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -125,10 +121,6 @@ learning_rate = 0.001
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
-# -------------------------------------------------------------------
-# 11. Training loop
-# -------------------------------------------------------------------
 
 for epoch in range(epochs):
     total_loss = 0
@@ -152,9 +144,6 @@ for epoch in range(epochs):
     print(f"Epoch: {epoch + 1}, Loss: {total_loss:.4f}")
 
 
-# -------------------------------------------------------------------
-# 12. Prediction function
-# -------------------------------------------------------------------
 
 def prediction(model, vocab, text, seq_len):
     """Predict the next word given input text."""
