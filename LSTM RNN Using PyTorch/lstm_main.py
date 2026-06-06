@@ -24,7 +24,7 @@ for token in Counter(tokens).keys():
     if token not in vocab:
         vocab[token] = len(vocab)
 
-print(f"Vocabulary size: {len(vocab)}", flush=True)
+print(f"Vocabulary size: {len(vocab)}")
 
 # -------------------------------------------------------------------
 # 4. Split into sentences and convert to numerical indices
@@ -43,7 +43,6 @@ def text_to_indices(sentence, vocab):
     return numerical_sentence
 
 
-print("Converting sentences to indices...", flush=True)
 input_numerical_sentences = []
 
 for sentence in input_sentences:
