@@ -17,9 +17,6 @@ hamlet_path = os.path.join(script_dir, '..', 'LSTM RNN', 'hamlet.txt')
 
 with open(hamlet_path, 'r', encoding='utf-8') as file:
     document = file.read().lower()
-# -------------------------------------------------------------------
-# 2. Tokenize
-# -------------------------------------------------------------------
 
 tokens = word_tokenize(document)
 vocab = {'<unk>': 0}
@@ -30,9 +27,6 @@ for token in Counter(tokens).keys():
 
 print(f"Vocabulary size: {len(vocab)}")
 
-# -------------------------------------------------------------------
-# 4. Split into sentences and convert to numerical indices
-# -------------------------------------------------------------------
 
 input_sentences = document.split('\n')
 
@@ -81,12 +75,6 @@ padded_training_sequence = torch.tensor(padded_training_sequence, dtype=torch.lo
 X = padded_training_sequence[:, :-1]
 y = padded_training_sequence[:, -1]
 
-print(f"X shape: {X.shape}")
-print(f"y shape: {y.shape}")
-
-# -------------------------------------------------------------------
-# 8. Create Dataset and DataLoader
-# -------------------------------------------------------------------
 
 
 class CustomDataset(Dataset):
@@ -106,10 +94,6 @@ dataset = CustomDataset(X, y)
 dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
 
 print(f"Dataset size: {len(dataset)}")
-
-# -------------------------------------------------------------------
-# 9. Define the LSTM Model
-# -------------------------------------------------------------------
 
 
 class LSTMModel(nn.Module):
