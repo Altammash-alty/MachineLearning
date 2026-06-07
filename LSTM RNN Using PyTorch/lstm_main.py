@@ -25,7 +25,6 @@ for token in Counter(tokens).keys():
     if token not in vocab:
         vocab[token] = len(vocab)
 
-print(f"Vocabulary size: {len(vocab)}")
 
 
 input_sentences = document.split('\n')
@@ -54,7 +53,6 @@ for sentence in input_numerical_sentences:
     for i in range(1, len(sentence)):
         training_sequence.append(sentence[:i + 1])
 
-print(f"Number of training sequences: {len(training_sequence)}")
 
 len_list = [len(seq) for seq in training_sequence]
 max_len = max(len_list)
