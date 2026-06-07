@@ -56,7 +56,7 @@ for sentence in input_numerical_sentences:
 
 len_list = [len(seq) for seq in training_sequence]
 max_len = max(len_list)
-print(f"Max sequence length: {max_len}")
+
 
 
 MAX_SEQ_LEN = 100
