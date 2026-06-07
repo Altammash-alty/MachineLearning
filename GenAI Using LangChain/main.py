@@ -1,5 +1,18 @@
 from langchain_huggingface import HuggingFacePipeline, HuggingFaceEndpoint
+from dotenv import load_dotenv
 import os
+from langchain_core.prompts import PromptTemplate
+
+
+
+load_dotenv()
+
+
+template = PromptTemplate(
+    template="",
+    input_variables="",
+    validate_template=True
+)
 
 repo_id = "meta-llama/Llama-3.1-8B"
 
@@ -10,9 +23,13 @@ llm = HuggingFaceEndpoint(
 )
 
 
-question = "What is the capital of France?"
-print(f"Question: {question}")
+prompt = template.invoke(
+    userinput1="",
+    uerinput2="",
+    userinput3=""
 
-response = llm.invoke(question)
-print(f"Answer: {response}")
+)
+
+result=llm.invoke(prompt)
+print(result.content)
 
