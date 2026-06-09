@@ -43,7 +43,8 @@ llm = HuggingFaceEndpoint(
 prompt = template.invoke(
     userinput1="",
     uerinput2="",
-    userinput3=""
+    uerinput3="",
+    userinput4="",  
 
 )
 
