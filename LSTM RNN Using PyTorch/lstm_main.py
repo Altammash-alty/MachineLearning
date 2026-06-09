@@ -199,7 +199,7 @@ def calculate_accuracy(model, dataloader, device):
         for batch_x, batch_y in dataloader:
             batch_x, batch_y = batch_x.to(device), batch_y.to(device)
 
-            output = model(batch_x)
+            outputs = model(batch_x)
 
             _, predicted = torch.max(outputs, dim=1)
 
