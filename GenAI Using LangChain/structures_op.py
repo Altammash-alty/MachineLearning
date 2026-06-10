@@ -11,4 +11,8 @@ model=HuggingFaceEndpoint(
     task="conversational",
     temperature=2.0,
 )
+parser=StructureOutputParser()
 
+schema=[
+    ResponseSchema(),ResponseSchema(),ResponseSchema
+]
