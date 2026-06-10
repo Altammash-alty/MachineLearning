@@ -35,9 +35,9 @@ parser = StrOutputParser()
 
 chain = Prompt1 | model | parser | Prompt2 | model | parser
 
-# result=Prompt1.invoke({"topic":"Black Hole"})
+result=chain.invoke({"topic":"Black Hole"})
 
-# final_result=Prompt2.invoke({"text":result.content})
+print(result)
 
-# print(final_result.content)
+
 
