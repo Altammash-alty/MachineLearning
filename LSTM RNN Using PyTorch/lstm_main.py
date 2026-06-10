@@ -32,6 +32,7 @@ input_sentences = document.split('\n')
 
 def text_to_indices(sentence, vocab):
     numerical_sentence = []
+    new_variable=[]
     for token in sentence:
         if token in vocab:
             numerical_sentence.append(vocab[token])
