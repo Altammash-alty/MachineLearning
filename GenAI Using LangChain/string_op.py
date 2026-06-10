@@ -11,4 +11,4 @@ llm = HuggingFaceEndpoint(
     temperature=2.0
 )
 
-ch
+model=ChatHuggingFace(llm=llm)
