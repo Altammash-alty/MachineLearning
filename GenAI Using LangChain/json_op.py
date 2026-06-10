@@ -23,3 +23,7 @@ Prompt1=PromptTemplate(
     partial_variables={'format_instruction':'parser.get_format_instructions()'},
     validate_template=True
 )
+
+result=model.invoke(Prompt1)
+final_result=parser.parse(result.content)
+print(final_reuslt)
