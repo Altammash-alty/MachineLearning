@@ -27,3 +27,7 @@ Prompt1=PromptTemplate(
 result=model.invoke(Prompt1)
 final_result=parser.parse(result.content)
 print(final_reuslt)
+
+chain = Prompt1 | model |parser
+
+chain.invoke({})
