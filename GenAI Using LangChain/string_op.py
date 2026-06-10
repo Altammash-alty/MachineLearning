@@ -22,3 +22,15 @@ Prompt1=PromptTemplate(
     validate_template=True
 )
 #2nd prompt
+Prompt2=PromptTemplate(
+    template="Write a 5 line summary on the following {text}",
+    input_variables=["text"],
+    validate_template=True
+)
+
+result=Prompt1.invoke({"topic":"Black Hole"})
+
+final_result=Prompt2.invoke({"text":result.content})
+
+print(final_result.content)
+
