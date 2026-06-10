@@ -1,5 +1,6 @@
 from langchain_huggingface import HuggingFaceEndpoint , HuggingFacePipeline , ChatHuggingFace
 from langchain.langchain_core.prompts import PromptTemplate , HumanMessage , AIMessage
+from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
 import os
 
@@ -28,9 +29,15 @@ Prompt2=PromptTemplate(
     validate_template=True
 )
 
-result=Prompt1.invoke({"topic":"Black Hole"})
+parser = StrOutputParser()
 
-final_result=Prompt2.invoke({"text":result.content})
+#chain creation 
 
-print(final_result.content)
+chain = Prompt1 | model | parser | Prompt2 | model | parser
+
+# result=Prompt1.invoke({"topic":"Black Hole"})
+
+# final_result=Prompt2.invoke({"text":result.content})
+
+# print(final_result.content)
 
