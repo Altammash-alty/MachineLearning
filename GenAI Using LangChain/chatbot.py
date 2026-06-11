@@ -15,7 +15,7 @@ messages=[
     SystemMessage(content="")
 ]
 
-chat_history = []
+chat_history = [sjnnasn]
 while True :
     user_input=input('Your input'),
     messages.append(HumanMessage(content=user_input))
