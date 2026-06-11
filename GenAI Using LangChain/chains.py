@@ -14,3 +14,5 @@ llm = HuggingFaceEndpoint(
 )
 
 parser = PydanticOutpuParser()
+
+chain = Prompt1 | model | parser
