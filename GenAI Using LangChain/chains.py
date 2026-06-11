@@ -14,6 +14,10 @@ llm = HuggingFaceEndpoint(
     temperature=2
 )
 
+class Person():
+    age : int = Field("description":"", examples="")
+    name : str = Field()
+    city : str = Field()
 parser = PydanticOutpuParser(Pydantic_object=Person)
 
 chain = Prompt1 | model | parser
