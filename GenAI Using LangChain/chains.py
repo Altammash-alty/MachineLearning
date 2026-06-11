@@ -1,7 +1,7 @@
 from langchain_huggingface import HuggingFacePipeline , HuggingFaceEndpoint
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableParallel , RunnableBranch , RunnableLambda
-from langchain_core import Pydantic
+from langchain_core import PydanticOutpuParser , ResponseSchema
 from Pydantic import BaseModel , Field
 from dotenv import load_dotenv
 from typing import Literal
@@ -21,6 +21,12 @@ parser = PydanticOutpuParser(Pydantic_object=Person)
 Prompt1 = PromptTemplate(
     template="You are an expert in the {domain} . YOu have to explain the {topic} to the user in a manner such that a small kid of 2 yrs can understand the text language if the explanation is read to him\n{format_instructions}",
     input_variables={"domain","topic"},
+    partial_variables={"format_instructions":parser.get_format_instructions()}
+)
+
+Prompt2 = PromptTemplate(
+    template="You are an excellent {domain} . You are given an explanation of the {topic}. Provide a {n} line summary for the explanation having only the key words from the explanation, no extra words \n {format_instructions}",
+    input_variables={"domain","topic","n"},
     partial_variables={"format_instructions":parser.get_format_instructions()}
 )
 
