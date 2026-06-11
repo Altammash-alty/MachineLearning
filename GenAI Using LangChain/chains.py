@@ -12,3 +12,5 @@ llm = HuggingFaceEndpoint(
     task="",
     temperature=2
 )
+
+parser = PydanticOutpuParser()
