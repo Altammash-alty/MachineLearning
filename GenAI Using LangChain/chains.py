@@ -15,11 +15,14 @@ llm = HuggingFaceEndpoint(
     temperature=2
 )
 
+parser = PydanticOutpuParser(Pydantic_object=Person)
+
 
 Prompt1 = PromptTemplate(
-    template="You are an expert in the {domain} . YOu have to explain the {topic} to the user in a manner such that a small kid of 2 yrs can understand the text language if the explanation is read to him" /n {format_instructions}
+    template="You are an expert in the {domain} . YOu have to explain the {topic} to the user in a manner such that a small kid of 2 yrs can understand the text language if the explanation is read to him\n{format_instructions}",
     input_variables={"domain","topic"},
+    partial_variables={"format_instructions":parser.get_format_instructions()}
 )
-parser = PydanticOutpuParser(Pydantic_object=Person)
+
 
 chain = Prompt1 | model | parser
