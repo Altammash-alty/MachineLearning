@@ -30,5 +30,10 @@ Prompt2 = PromptTemplate(
     partial_variables={"format_instructions":parser.get_format_instructions()}
 )
 
+schema = [
+    ResponseSchema(name="name",description="The name of the person."),
+    ResponseSchema(name="age",description="The age of the person."),
+    ResponseSchema(name="review",description="The review of the person.")
+]
 
 chain = Prompt1 | model | parser
