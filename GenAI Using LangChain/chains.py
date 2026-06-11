@@ -1,1 +1,2 @@
-from langchain
+from langchain_huggingface import HuggingFacePipeline , HuggingFaceEndpoint
+from dotenv import load_dotenv

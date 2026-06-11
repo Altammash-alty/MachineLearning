@@ -1,2 +1,3 @@
 *.csv
 MNISTFashion/fashion-mnist_train.csv
+auto-push.ps1
