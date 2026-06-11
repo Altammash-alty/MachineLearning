@@ -12,8 +12,7 @@ model = HuggingFaceEndpoint(
     max_new_tokens=256,
 )
 messages=[
-    SystemMessage(content=""),
-    HumanMessag(content="")
+    SystemMessage(content="")
 ]
 
 chat_history = []
