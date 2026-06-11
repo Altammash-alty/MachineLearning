@@ -4,6 +4,7 @@ from langchain_core.runnables import RunnableParallel , RunnableBranch , Runnabl
 from langchain_core import Pydantic
 from Pydantic import BaseModel , Field
 from dotenv import load_dotenv
+from typing import Literal
 
 load_dotenv()
 
@@ -13,6 +14,6 @@ llm = HuggingFaceEndpoint(
     temperature=2
 )
 
-parser = PydanticOutpuParser()
+parser = PydanticOutpuParser(Pydantic_object=Person)
 
 chain = Prompt1 | model | parser
