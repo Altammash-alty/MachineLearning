@@ -16,8 +16,8 @@ llm = HuggingFaceEndpoint(
 
 class Person():
     age : int = Field("description":"", examples="")
-    name : str = Field()
-    city : str = Field()
+    name : str = Field("description":"",examples="")
+    review : str = Field("description":"",examples="",Literal:["pos","neg","neu"])
 parser = PydanticOutpuParser(Pydantic_object=Person)
 
 chain = Prompt1 | model | parser
