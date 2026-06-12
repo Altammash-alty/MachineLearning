@@ -54,3 +54,11 @@ prompt=template.format({
 llm = NakliLLM()
 
 llm.predict(prompt)
+
+class NakliLLMChain():
+    def __init__(self,llm,template):
+        self.llm = llm 
+        self.template = template
+
+    def run(self,dict):
+        return 
