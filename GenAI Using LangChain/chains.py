@@ -52,5 +52,7 @@ branch_chain = RunnableBranch(
 )
 
 data = seq_chain.invoke({
-    "domain":
+    "domain":"Quantum Mechanics",
+    "topic":"Superposition and Entanglement",
+    "n":3
 })
