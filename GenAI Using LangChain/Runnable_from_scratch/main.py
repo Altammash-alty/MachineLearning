@@ -65,3 +65,9 @@ class NakliLLMChain():
         final_prompt= self.prompt.format(dict)
         return self.llm.predict(final_prompt)
 
+llm_chain = NakliLLMChain(llm,template)
+llm_chain.run({
+    "name" : "Altammash",
+    "age" : "21",
+    "review" : "I am a good boy."
+})
