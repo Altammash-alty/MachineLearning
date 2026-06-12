@@ -38,9 +38,15 @@ class NakliPromptTemplate():
        return self.template.format(**dict)
 
 
-template="""
+template=NakliPromptTemplate("""
 Create a small description of this person
 Name : {name}
 Age : {age}
 Review : {review}
-"""
+""")
+
+template.format({
+    "name" : "Altammash",
+    "age" : "21",
+    "review" : "I am a good boy."
+})
