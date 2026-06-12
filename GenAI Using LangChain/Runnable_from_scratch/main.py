@@ -32,3 +32,7 @@ class NakliLLM():
 class NakliPromptTemplate():
     def __init__(self,template,input_variables):
         self.template=template
+        self.input_variables=input_variables
+
+    def format(self,dict):
+       return self.template.format(**dict)
