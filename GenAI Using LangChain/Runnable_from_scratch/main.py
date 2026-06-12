@@ -36,3 +36,11 @@ class NakliPromptTemplate():
 
     def format(self,dict):
        return self.template.format(**dict)
+
+
+template="""
+Create a small description of this person
+Name : {name}
+Age : {age}
+Review : {review}
+"""
