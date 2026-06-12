@@ -29,4 +29,4 @@ class NakliLLM():
         return { "response" : random.choice(response_list)}
 
 
-l
+class NakliPromptTemplate():
