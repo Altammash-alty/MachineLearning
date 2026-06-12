@@ -8,9 +8,36 @@ class Runnable():
         pass
 
 
-class NakliLLM(ABC):
+class NakliLLM(Runnable):
     def __init__(self):
         print("LLM Created")
+
+
+    def invoke(self,prompt):
+        
+        response_list = [
+            """
+            Name : Altammash
+            Age : 21
+            Review : "I am a good boy."
+            """,
+
+            """
+            Name : Zoya
+            Age : 19
+            Review : "I am a good girl."
+            """,
+
+            """
+            Name : Aiman
+            Age : 25
+            Review : "I am a good girl."
+            """,
+        ]
+
+        return { "response" : random.choice(response_list)}
+
+
     def predict(self,prompt):
 
         response_list = [
