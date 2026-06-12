@@ -50,3 +50,7 @@ branch_chain = RunnableBranch(
     ("chain2",Prompt2 | model | parser ),
     (RunnableLambda(lambda x: "No matching")
 )
+
+data = seq_chain.invoke({
+    "domain":
+})
