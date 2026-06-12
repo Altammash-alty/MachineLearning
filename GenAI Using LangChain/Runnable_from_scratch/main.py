@@ -45,8 +45,12 @@ Age : {age}
 Review : {review}
 """)
 
-template.format({
+prompt=template.format({
     "name" : "Altammash",
     "age" : "21",
     "review" : "I am a good boy."
 })
+
+llm = NakliLLM()
+
+llm.predict(prompt)
