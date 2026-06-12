@@ -37,3 +37,9 @@ schema = [
 ]
 
 chain = Prompt1 | model | parser
+
+branch_chain = RunnableBranch(
+    ("chain1",Prompt1 | model | parser ),
+    ("chain2",Prompt2 | model | parser ),
+    (RunnableLambda(lambda x: "No matching")
+)
