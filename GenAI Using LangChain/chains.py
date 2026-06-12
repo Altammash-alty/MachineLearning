@@ -38,6 +38,11 @@ schema = [
 
 chain = Prompt1 | model | parser
 
+
+seq_chain = RunnableParallel(
+        
+)
+
 branch_chain = RunnableBranch(
     ("chain1",Prompt1 | model | parser ),
     ("chain2",Prompt2 | model | parser ),
