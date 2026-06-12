@@ -1,7 +1,8 @@
 import random
+from abc import ABC, abstractmethod
 
 
-class NakliLLM():
+class NakliLLM(ABC):
     def __init__(self):
         print("LLM Created")
     def predict(self,prompt):
@@ -61,4 +62,6 @@ class NakliLLMChain():
         self.template = template
 
     def run(self,dict):
-        return 
+        final_prompt= self.prompt.format(dict)
+        return self.llm.predict(final_prompt)
+
