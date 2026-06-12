@@ -36,11 +36,13 @@ schema = [
     ResponseSchema(name="review",description="The review of the person.")
 ]
 
-chain = Prompt1 | model | parser
+chain1 = Prompt1 | model | parser
+chain2 = Prompt2 | model | parser 
 
 
 seq_chain = RunnableParallel(
-        
+    "chain1" : chain1 ,
+    "Chain2" : chain2
 )
 
 branch_chain = RunnableBranch(
