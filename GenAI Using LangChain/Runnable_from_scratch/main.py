@@ -30,3 +30,5 @@ class NakliLLM():
 
 
 class NakliPromptTemplate():
+    def __init__(self,template,input_variables):
+        self.template=template
