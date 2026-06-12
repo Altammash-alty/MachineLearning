@@ -1,6 +1,12 @@
 import random
 from abc import ABC, abstractmethod
 
+class Runnable():
+
+    @abstractmethod
+    def invoke(self,dict):
+        pass
+
 
 class NakliLLM(ABC):
     def __init__(self):
@@ -71,3 +77,5 @@ llm_chain.run({
     "age" : "21",
     "review" : "I am a good boy."
 })
+
+
