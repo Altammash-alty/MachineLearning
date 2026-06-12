@@ -56,3 +56,7 @@ data = seq_chain.invoke({
     "topic":"Superposition and Entanglement",
     "n":3
 })
+
+print(data)
+
+print(seq_chain.get_graph().print_ascii())
