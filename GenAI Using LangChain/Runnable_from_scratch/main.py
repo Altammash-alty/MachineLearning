@@ -109,6 +109,15 @@ llm_chain.run({
     "review" : "I am a good boy."
 })
 
+class NakliOutputParser(Runnable):
+    def __init__(self,output_parser):
+        self.output_parser=output_parser
+
+    def invoke(self,dict):
+        return self.output_parser(dict)
+
+    
+
 
 class RunnableConnector(Runnable):
     def __init__ (self,runnable_list):
