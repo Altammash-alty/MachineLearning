@@ -110,3 +110,11 @@ llm_chain.run({
 })
 
 
+class RunnableConnector(Runnable):
+    def __init__ (self,runnable_list):
+        self.runnable_list=runnable_list
+    def invoke(self,invoke_data):
+
+        for runnable in self.runnable_list:
+            invoke_data = runnable.invoke(invoke_data
+    
