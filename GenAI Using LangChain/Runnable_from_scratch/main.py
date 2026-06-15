@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 
-class Runnable():
+class Runnable(ABC):
 
     @abstractmethod
     def invoke(self,dict):
@@ -69,33 +69,11 @@ class NakliPromptTemplate(Runnable):
         self.input_variables=input_variables
         
     def invoke(self,dict):
+        pass
 
     def format(self,dict):
        return self.template.format(**dict)
 
-    def invoke(self,prompt):
-        
-        response_list = [
-            """
-            Name : Altammash
-            Age : 21
-            Review : "I am a good boy."
-            """,
-
-            """
-            Name : Zoya
-            Age : 19
-            Review : "I am a good girl."
-            """,
-
-            """
-            Name : Aiman
-            Age : 25
-            Review : "I am a good girl."
-            """,
-        ]
-
-        return { "response" : random.choice(response_list)}
 
 
 template=NakliPromptTemplate("""
