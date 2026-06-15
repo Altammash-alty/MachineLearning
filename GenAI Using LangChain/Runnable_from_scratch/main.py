@@ -116,5 +116,13 @@ class RunnableConnector(Runnable):
     def invoke(self,invoke_data):
 
         for runnable in self.runnable_list:
-            invoke_data = runnable.invoke(invoke_data
-    
+            invoke_data = runnable.invoke(invoke_data)
+        return invoke_data
+
+runnable_connector = RunnableConnector([template,llm])
+result = runnable_connector.invoke({
+    "name" : "Altammash",
+    "age" : "21",
+    "review" : "I am a good boy."
+})
+print(result)
