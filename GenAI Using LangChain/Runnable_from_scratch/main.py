@@ -69,7 +69,7 @@ class NakliPromptTemplate(Runnable):
         self.input_variables=input_variables
         
     def invoke(self,dict):
-        pass
+        return self.template.format(**dict)
 
     def format(self,dict):
        return self.template.format(**dict)
