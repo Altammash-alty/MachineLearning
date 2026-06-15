@@ -117,7 +117,9 @@ class NakliOutputParser(Runnable):
         return self.output_parser(dict)
 
     
-
+parser = NakliOutputParser(
+    output_parser=lambda x: x["response"]
+)
 
 class RunnableConnector(Runnable):
     def __init__ (self,runnable_list):
@@ -128,7 +130,7 @@ class RunnableConnector(Runnable):
             invoke_data = runnable.invoke(invoke_data)
         return invoke_data
 
-runnable_connector = RunnableConnector([template,llm])
+runnable_connector = RunnableConnector([template,llm,parser])
 result = runnable_connector.invoke({
     "name" : "Altammash",
     "age" : "21",
