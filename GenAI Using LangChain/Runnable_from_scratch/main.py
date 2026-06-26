@@ -137,3 +137,24 @@ result = runnable_connector.invoke({
     "review" : "I am a good boy."
 })
 print(result)
+
+
+#making a complex chain 
+
+template1 = NakliPromptTemplate(
+    template="Write me a joke about this {topic}",
+    input_variables=["topic"]
+    )
+
+template2 = NakliPromptTemplate(
+    template="Explain the following {text} in short",
+    input_variables=["text"]
+    )
+
+prompt1 = template1.invoke({
+    "topic" : "AI"
+})
+
+prompt2 = template2.invoke({
+    "text" : prompt1
+})
