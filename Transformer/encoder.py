@@ -1,6 +1,7 @@
 import torch 
 import torch.nn as nn 
 from torch.utils.data import Dataset,DataLoader
+from sklearn.model_selection import train_test_split
 
 
 
@@ -38,4 +39,8 @@ class NewDataset(Dataset):
     def __getitem__(self,idx):
         return {"input_ids":self.data["input_ids"][idx], "attention_mask":self.data["attention_mask"][idx]}
 
-DataLoader = DataLoad
+dataset=NewDataset()
+X_train,X_test,Y_train,Y_test=train_test_split(dataset,test_size=0.2)
+
+train_dataloader= DataLoader(X_train,batch_size=32,shuffle=True)
+test_dataloader= DataLoader(X_test,batch_size=32,shuffle=False)
