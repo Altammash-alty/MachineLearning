@@ -16,5 +16,6 @@ class encode(nn.Module):
         x=self.embedding(x)
         x=self.pos_embedding(x)
         x=self.encoder(x)
+        logits=self.fc(x)
         return logits
         
