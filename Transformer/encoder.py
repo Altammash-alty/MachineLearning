@@ -14,6 +14,7 @@ class encode(nn.Module):
         self.fc=nn.Linear(d_model,vocab_size)
     def forward(self,x):
         x=self.embedding(x)
-       
+        x=self.pos_embedding(x)
+    
         return logits
         
