@@ -34,7 +34,8 @@ class NewDataset(Dataset):
         self.data=self.tokeniser(self.text_file)
     def __len__(self,data):
         return len(self.data)
-    def __getitem__(seld,idx):
-        return self.data[idx]
+        #Tokeniser returns a dict of  input_ids and attentiion mask
+    def __getitem__(self,idx):
+        return {"input_ids":self.data["input_ids"][idx], "attention_mask":self.data["attention_mask"][idx]}
 
-        
+DataLoader = DataLoad
