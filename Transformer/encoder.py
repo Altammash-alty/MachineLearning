@@ -10,6 +10,9 @@ class encode(nn.Module):
         self.embedding=nn.Embedding(vocab_size,n_dim)
         self.dropout=nn.Dropout(0.1)
         self.pos_embedding=nn.Embedding(max_len,n_dim)
+        self.encoder_layer=nn.TransformerEncoderLayer(d_model=n_dim,d_ff=d_ff,nhead=n_heads,batch_first=True)
+        
+       
        
     def forward(self,x):
         return logits
