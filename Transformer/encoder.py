@@ -13,5 +13,7 @@ class encode(nn.Module):
         self.encoder=nn.TransformerEncoder(encoder_layer,num_layers=n_layer)
         self.fc=nn.Linear(d_model,vocab_size)
     def forward(self,x):
+        x=self.embedding(x)
+       
         return logits
         
