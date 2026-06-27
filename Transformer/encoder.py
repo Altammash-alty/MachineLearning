@@ -11,12 +11,17 @@ class encode(nn.Module):
         self.pos_embedding=nn.Embedding(max_len,n_dim)
         encoder_layer=nn.TransformerEncoderLayer(d_model=n_dim,d_ff=d_ff,nhead=n_heads,batch_first=True)
         self.encoder=nn.TransformerEncoder(encoder_layer,num_layers=n_layer)
+        self.norm=nn.LayerNorm(n_dim)
         self.fc=nn.Linear(d_model,vocab_size)
+        self.norm=nn.LayerNorm(vocab_size)
     def forward(self,x):
         batch_size,seq_len=x.shape
-        positions=torch.arange(0,seq_len,device=x.device).unsqueeze(0)
+        positions=torch.arrange(0,seq_len,device=x.device).unsqueeze(0)
         x=self.embedding(x)+self.pos_embedding(positions)
         x=self.encoder(x)
         logits=self.fc(x)
         return logits
+
+
+
         
