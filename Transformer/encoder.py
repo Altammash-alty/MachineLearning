@@ -13,8 +13,12 @@ class encode(nn.Module):
         self.encoder=nn.TransformerEncoder(encoder_layer,num_layers=n_layer)
         self.fc=nn.Linear(d_model,vocab_size)
     def forward(self,x):
+        batch_size,seq_len=x.shape
+        positions=torch.arange(0,seq_len,device=x.device).unsqueeze(0)
+        
+    
         x=self.embedding(x)
-        x=self.pos_embedding(x)
+        x=self.pos_embedding(positions)
         x=self.encoder(x)
         logits=self.fc(x)
         return logits
