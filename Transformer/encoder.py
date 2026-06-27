@@ -15,10 +15,7 @@ class encode(nn.Module):
     def forward(self,x):
         batch_size,seq_len=x.shape
         positions=torch.arange(0,seq_len,device=x.device).unsqueeze(0)
-        
-    
-        x=self.embedding(x)
-        x=self.pos_embedding(positions)
+        x=self.embedding(x)+self.pos_embedding(positions)
         x=self.encoder(x)
         logits=self.fc(x)
         return logits
