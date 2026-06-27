@@ -12,7 +12,13 @@ class encode(nn.Module):
         self.pos_embedding=nn.Embedding(max_len,n_dim)
         self.encoder_layer=nn.TransformerEncoderLayer(d_model=n_dim,d_ff=d_ff,nhead=n_heads,batch_first=True)
         
-       
+        self.encode=nn.Sequential(
+            self.embedding,
+            self.dropout,
+            self.pos_embedding,
+            self.encoder_layer
+        )
+    
        
     def forward(self,x):
         return logits
