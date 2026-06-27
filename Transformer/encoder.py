@@ -1,5 +1,6 @@
 import torch 
 import torch.nn as nn 
+from torch.utils.data import Dataset,DataLoader
 
 
 
@@ -24,6 +25,16 @@ class encode(nn.Module):
         logits=self.norm(x)
         return logits
 
-
+#Creating the dataloader and dataset class 
+class NewDataset(Dataset):
+    def __init__(self,text_file,tokeniser):
+        with open (text_file,'r') as file:
+            self.text_file=file.read()
+        self.tokeniser=tokeniser
+        self.data=self.tokeniser(self.text_file)
+    def __len__(self,data):
+        return len(self.data)
+    def __getitem__(seld,idx):
+        return self.data[idx]
 
         
