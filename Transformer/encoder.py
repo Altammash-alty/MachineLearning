@@ -19,7 +19,9 @@ class encode(nn.Module):
         positions=torch.arrange(0,seq_len,device=x.device).unsqueeze(0)
         x=self.embedding(x)+self.pos_embedding(positions)
         x=self.encoder(x)
-        logits=self.fc(x)
+        x=self.norm(x)
+        x=self.fc(x)
+        logits=self.norm(x)
         return logits
 
 
