@@ -15,6 +15,6 @@ class encode(nn.Module):
     def forward(self,x):
         x=self.embedding(x)
         x=self.pos_embedding(x)
-    
+        x=self.encoder(x)
         return logits
         
