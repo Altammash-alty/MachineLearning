@@ -44,3 +44,19 @@ X_train,X_test,Y_train,Y_test=train_test_split(dataset,test_size=0.2)
 
 train_dataloader= DataLoader(X_train,batch_size=32,shuffle=True)
 test_dataloader= DataLoader(X_test,batch_size=32,shuffle=False)
+
+epochs = 100 
+optimiser = optim.Adam(encoder.parameters(),lr=learning_rate)
+criterion=nnn.CrossEntropyLoss()
+
+for epoch in range(epochs):
+    for batch_features , batch_labels in train_dataloader :
+        output=encoder(batch_features)
+        loss=criterion(output,batch_labels)
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
+    print(f"Epoch {epoch+1}/{epochs}, Loss: {loss.item():.4f}")
+
+#printing the loss function 
+loss=nn.CrossEntropyLoss()
