@@ -8,18 +8,10 @@ class encode(nn.Module):
     def __init__(self,vocab_size,n_dim,n_heads,n_layer,d_ff):
         super().__init__()
         self.embedding=nn.Embedding(vocab_size,n_dim)
-        self.dropout=nn.Dropout(0.1)
         self.pos_embedding=nn.Embedding(max_len,n_dim)
-        self.encoder_layer=nn.TransformerEncoderLayer(d_model=n_dim,d_ff=d_ff,nhead=n_heads,batch_first=True)
-        
-        self.encode=nn.Sequential(
-            self.embedding,
-            self.dropout,
-            self.pos_embedding,
-            self.encoder_layer
-        )
-    
-       
+        encoder_layer=nn.TransformerEncoderLayer(d_model=n_dim,d_ff=d_ff,nhead=n_heads,batch_first=True)
+        self.encoder=nn.TransformerEncoder(encoder_layer,num_layers=n_layer)
+        self.fc=nn.Linear(d_model,vocab_size)
     def forward(self,x):
         return logits
         
