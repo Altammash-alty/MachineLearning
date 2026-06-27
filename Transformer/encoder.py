@@ -9,6 +9,7 @@ class encode(nn.Module):
         super().__init__()
         self.embedding=nn.Embedding(vocab_size,n_dim)
         self.dropout=nn.Dropout(0.1)
+        self.pos_embedding=nn.Embedding(max_len,n_dim)
        
     def forward(self,x):
         return logits
