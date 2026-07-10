@@ -9,7 +9,10 @@ class conversation_history(BaseModel):
     messages : Annotated[list[BaseMessage],add_messages]
 
 
-    
+
+def chat_node(State:conversation_history):
+    messages = State['messages']
+
     
 graph = StateGraph(conversation_history)
 
