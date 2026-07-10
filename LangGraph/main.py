@@ -17,7 +17,7 @@ llm = HuggingFaceEndpoint(
 )
 
 def chat_node(state:conversation_history):
-    messages = State['messages']
+    messages = state['messages']
 
     
 graph = StateGraph(conversation_history)
