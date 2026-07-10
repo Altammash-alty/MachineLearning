@@ -16,7 +16,7 @@ llm = HuggingFaceEndpoint(
     temperature=1.2
 )
 
-def chat_node(State:conversation_history):
+def chat_node(state:conversation_history):
     messages = State['messages']
 
     
