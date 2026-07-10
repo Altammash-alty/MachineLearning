@@ -10,7 +10,11 @@ class conversation_history(BaseModel):
     messages : Annotated[list[BaseMessage],add_messages]
 
 repo_id = ""
-
+llm = HuggingFaceEndpoint(
+    repo_id=repo_id,
+    task="conversation",
+    temperature=1.2
+)
 
 def chat_node(State:conversation_history):
     messages = State['messages']
