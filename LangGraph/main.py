@@ -42,4 +42,4 @@ while True :
     if user_message.strip().lower() in ["quit","bye","exit"]:
         break
     response = workflow.invoke({"message":HumanMessage(content=user_message)})
-    print(response['messages'][-1])
+    print(response['messages'][-1].content)
