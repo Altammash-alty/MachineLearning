@@ -29,3 +29,10 @@ graph.add_edge(START,chat_node)
 graph.add_edge(chat_node,END)
 
 workflow = graph.compile()
+
+initial_state={
+    "message":[HumanMessage(content="what is my name")]
+}
+
+final_state = workflow.invoke(initial_state)
+print(final_state['messages'])
