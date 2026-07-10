@@ -8,3 +8,5 @@ class conversation_history(BaseModel):
     """BaseMessage gives the flexibility to the user to store the conversation whether it is human message , AI or System """
     messages : Annotated[list[BaseMessage],add_messages]
     
+graph = StateGraph(conversation_history)
+
