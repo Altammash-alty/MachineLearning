@@ -21,8 +21,12 @@ def chat_node(state:conversation_history):
     response=llm.invoke(messages)
     return {"messages":response}
 
-    
+
 graph = StateGraph(conversation_history)
+
+
+checkpointer=MemorySaver()
+
 
 graph.add_node('chat_node',chat_node)
 graph.add_edge(START,chat_node)
