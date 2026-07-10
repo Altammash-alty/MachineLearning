@@ -38,4 +38,6 @@ final_state = workflow.invoke(initial_state)
 print(final_state['messages'])
 
 while True :
-    
+    user_message=input("What is your  query ?")
+    if user_message.strip().lower() in ["quit","bye","exit"]:
+        break
