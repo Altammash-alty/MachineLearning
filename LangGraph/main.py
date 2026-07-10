@@ -18,6 +18,8 @@ llm = HuggingFaceEndpoint(
 
 def chat_node(state:conversation_history):
     messages = state['messages']
+    response=llm.invoke(messages)
+    return {"messages":response}
 
     
 graph = StateGraph(conversation_history)
