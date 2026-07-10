@@ -9,10 +9,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Trainer:
-    """
-    A production-grade Trainer for neural networks in PyTorch.
-    Handles device selection, logging, metrics, checkpoint saving, and early stopping.
-    """
     def __init__(
         self,
         model: nn.Module,
@@ -34,7 +30,7 @@ class Trainer:
         self.early_stopping_patience = early_stopping_patience
         self.checkpoint_dir = checkpoint_dir
 
-        # Auto-detect device
+
         if device == "auto":
             if torch.cuda.is_available():
                 self.device = torch.device("cuda")
