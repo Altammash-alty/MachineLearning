@@ -32,7 +32,7 @@ graph.add_node('chat_node',chat_node)
 graph.add_edge(START,chat_node)
 graph.add_edge(chat_node,END)
 
-workflow = graph.compile()
+workflow = graph.compile(checkpointer=checkpointer)
 
 initial_state={
     "message":[HumanMessage(content="what is my name")]
