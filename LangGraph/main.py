@@ -41,3 +41,5 @@ while True :
     user_message=input("What is your  query ?")
     if user_message.strip().lower() in ["quit","bye","exit"]:
         break
+    response = workflow.invoke({"message":HumanMessage(content=user_message)})
+    print(response['messages'][-1])
