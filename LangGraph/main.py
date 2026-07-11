@@ -55,4 +55,6 @@ while True :
         }   
     }
     response = workflow.stream({"message":HumanMessage(content=user_message)},config=config, stream_mode='messages')
+
+    for messsage.chunk , metadata in stream :
     print(response['messages'][-1].content)
