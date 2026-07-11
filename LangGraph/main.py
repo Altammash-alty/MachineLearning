@@ -54,9 +54,5 @@ while True :
         {"messages":HumanMessage(content=user_message)},config={
         "configurable":{
             "thread_id":thread_id
-        }   },
-            stream_mode='messages')):
-
-    for messsage.chunk , metadata in workflow.stream :
-
-        print(response['messages'][-1].content)
+        }   },stream_mode='messages'):
+        print(message.chunk[-1].content)
