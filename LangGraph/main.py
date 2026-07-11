@@ -54,5 +54,5 @@ while True :
             "thread_id":thread_id
         }   
     }
-    response = workflow.invoke({"message":HumanMessage(content=user_message)},config=config)
+    response = workflow.stream({"message":HumanMessage(content=user_message)},config=config,)
     print(response['messages'][-1].content)
