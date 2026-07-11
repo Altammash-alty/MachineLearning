@@ -51,12 +51,12 @@ while True :
 
     
     for message.chunk , metadata in  workflow.stream(
-        ({"message":HumanMessage(content=user_message)},config={
+        {"messages":HumanMessage(content=user_message)},config={
         "configurable":{
             "thread_id":thread_id
-        }   
-    }, stream_mode='messages')):
+        }   },
+            stream_mode='messages')):
 
     for messsage.chunk , metadata in workflow.stream :
 
-    print(response['messages'][-1].content)
+        print(response['messages'][-1].content)
